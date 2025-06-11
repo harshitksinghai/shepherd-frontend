@@ -9,6 +9,37 @@
     margin-bottom: 2rem;
 }
 
+.formContainer {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    margin-bottom: 2rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.formInput {
+    flex: 1;
+    padding: 0.5rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+}
+
+.formDate {
+    padding: 0.5rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+}
+
+.formPriority {
+    padding: 0.5rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    width: 80px;
+}
+
 .addButton {
     background: #4CAF50;
     color: white;
@@ -16,6 +47,11 @@
     padding: 0.5rem 1rem;
     border-radius: 4px;
     cursor: pointer;
+    opacity: 0.5;
+}
+
+.addButton:enabled {
+    opacity: 1;
 }
 
 .todoList {
