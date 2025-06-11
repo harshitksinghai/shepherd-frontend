@@ -1,5 +1,5 @@
 .pageContainer {
-    height: 100vh;
+    min-height: 100vh;
     max-width: 1600px;
     background-color: beige;
     padding: 2rem;
@@ -10,7 +10,6 @@
 
 .sideNav {
     width: 200px;
-    height: 100%;
     background-color: #fff;
     padding: 1rem;
     border-radius: 12px;
