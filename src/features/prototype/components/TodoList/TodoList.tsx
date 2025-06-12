@@ -4,7 +4,7 @@ import TodoCard from '../TodoCard/TodoCard';
 import { taskApi } from '../../api/taskApi';
 
 interface Todo {
-    id: string;
+    taskId: string;
     title: string;
     date: string;
     priority: number;
@@ -21,9 +21,9 @@ const TodoList = () => {
         try {
             const response = await taskApi.fetchAllTasks();
             const formattedTodos = response.data.map(task => ({
-                id: task.taskId,
+                taskId: task.taskId,
                 title: task.title,
-                date: new Date(task.dueDate).toISOString().split('T')[0],
+                date: task.dueDate.split('T')[0], // "2025-06-12T00:00:00" -> "2025-06-12"
                 priority: parseInt(task.priority)
             }));
             setTodos(formattedTodos);
@@ -43,7 +43,7 @@ const TodoList = () => {
         try {
             await taskApi.addTask({
                 title: newTitle,
-                dueDate: new Date(newDate).toISOString(),
+                dueDate: new Date(newDate).toISOString(), // ✅ includes time zone info (Z)
                 priority: newPriority.toString()
             });
             
@@ -58,11 +58,11 @@ const TodoList = () => {
         }
     };
 
-    const updateTodo = async (id: string, title: string, date: string, priority: number) => {
+    const updateTodo = async (taskId: string, title: string, date: string, priority: number) => {
         try {
-            await taskApi.updateTask(id, {
+            await taskApi.updateTask(taskId, {
                 title,
-                dueDate: new Date(date).toISOString(),
+                dueDate: new Date(date).toISOString(), // ✅ with time zone // ✅ includes time zone info (Z)
                 priority: priority.toString()
             });
             await fetchTodos();
@@ -71,16 +71,14 @@ const TodoList = () => {
         }
     };
 
-    const deleteTodo = async (id: string) => {
+    const deleteTodo = async (taskId: string) => {
         try {
-            await taskApi.deleteTask(id);
+            await taskApi.deleteTask(taskId);
             await fetchTodos();
         } catch (error) {
             console.error('Error deleting todo:', error);
         }
     };
-
-    const sortedTodos = [...todos].sort((a, b) => a.priority - b.priority);
 
     return (
         <div className={styles.container}>
@@ -121,10 +119,10 @@ const TodoList = () => {
                 </button>
             </div>
             <div className={styles.todoList}>
-                {sortedTodos.map(todo => (
+                {todos.map(todo => (
                     <TodoCard
-                        key={todo.id}
-                        id={todo.id}
+                        key={todo.taskId}
+                        taskId={todo.taskId}
                         initialTitle={todo.title}
                         initialDate={todo.date}
                         initialPriority={todo.priority}
