@@ -40,6 +40,30 @@
     width: 80px;
 }
 
+.formApproxTime {
+    padding: 0.5rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    width: 80px;
+}
+
+.formDivisibleContainer {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.formDivisibleCheckbox {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.formDivisibleLabel {
+    font-size: 0.9rem;
+    color: #666;
+}
+
 .addButton {
     background: #4CAF50;
     color: white;

@@ -8,6 +8,8 @@ interface Todo {
     title: string;
     date: string;
     priority: number;
+    approxTime: number;
+    isDivisible: boolean;
 }
 
 const TodoList = () => {
@@ -15,6 +17,8 @@ const TodoList = () => {
     const [newTitle, setNewTitle] = useState('');
     const [newDate, setNewDate] = useState(new Date().toISOString().split('T')[0]);
     const [newPriority, setNewPriority] = useState(1);
+    const [newApproxTime, setNewApproxTime] = useState(0.5);
+    const [newIsDivisible, setNewIsDivisible] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
     const fetchTodos = async () => {
@@ -24,7 +28,9 @@ const TodoList = () => {
                 taskId: task.taskId,
                 title: task.title,
                 date: task.dueDate.split('T')[0], // "2025-06-12T00:00:00" -> "2025-06-12"
-                priority: parseInt(task.priority)
+                priority: parseInt(task.priority),
+                approxTime: parseFloat(task.approxTime),
+                isDivisible: task.isDivisible === 'true'
             }));
             setTodos(formattedTodos);
         } catch (error) {
@@ -44,12 +50,16 @@ const TodoList = () => {
             await taskApi.addTask({
                 title: newTitle,
                 dueDate: new Date(newDate).toISOString(), // ✅ includes time zone info (Z)
-                priority: newPriority.toString()
+                priority: newPriority.toString(),
+                approxTime: newApproxTime.toString(),
+                isDivisible: newIsDivisible.toString()
             });
             
             setNewTitle('');
             setNewDate(new Date().toISOString().split('T')[0]);
             setNewPriority(1);
+            setNewApproxTime(0.5);
+            setNewIsDivisible(false);
             await fetchTodos();
         } catch (error) {
             console.error('Error adding todo:', error);
@@ -58,12 +68,14 @@ const TodoList = () => {
         }
     };
 
-    const updateTodo = async (taskId: string, title: string, date: string, priority: number) => {
+    const updateTodo = async (taskId: string, title: string, date: string, priority: number, approxTime: number, isDivisible: boolean) => {
         try {
             await taskApi.updateTask(taskId, {
                 title,
                 dueDate: new Date(date).toISOString(), // ✅ with time zone // ✅ includes time zone info (Z)
-                priority: priority.toString()
+                priority: priority.toString(),
+                approxTime: approxTime.toString(),
+                isDivisible: isDivisible.toString()
             });
             await fetchTodos();
         } catch (error) {
@@ -110,6 +122,26 @@ const TodoList = () => {
                     onChange={(e) => setNewDate(e.target.value)}
                     disabled={isLoading}
                 />
+                <input
+                    type="number"
+                    className={styles.formApproxTime}
+                    value={newApproxTime}
+                    onChange={(e) => setNewApproxTime(parseFloat(e.target.value))}
+                    min="0"
+                    step="0.5"
+                    placeholder="Hours"
+                    disabled={isLoading}
+                />
+                <div className={styles.formDivisibleContainer}>
+                    <input
+                        type="checkbox"
+                        className={styles.formDivisibleCheckbox}
+                        checked={newIsDivisible}
+                        onChange={(e) => setNewIsDivisible(e.target.checked)}
+                        disabled={isLoading}
+                    />
+                    <span className={styles.formDivisibleLabel}>Divisible</span>
+                </div>
                 <button
                     className={styles.addButton}
                     onClick={addTodo}
@@ -126,6 +158,8 @@ const TodoList = () => {
                         initialTitle={todo.title}
                         initialDate={todo.date}
                         initialPriority={todo.priority}
+                        initialApproxTime={todo.approxTime}
+                        initialIsDivisible={todo.isDivisible}
                         onDelete={deleteTodo}
                         onUpdate={updateTodo}
                     />

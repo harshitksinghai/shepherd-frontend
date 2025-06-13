@@ -4,6 +4,8 @@ interface TaskRequestDTO {
     title: string;
     dueDate: string;
     priority: string;
+    approxTime: string;
+    isDivisible: string;
 }
 
 interface TaskResponseDTO {
@@ -11,6 +13,8 @@ interface TaskResponseDTO {
     title: string;
     dueDate: string;
     priority: string;
+    approxTime: string;
+    isDivisible: string;
 }
 
 interface CommonResponseDTO {
